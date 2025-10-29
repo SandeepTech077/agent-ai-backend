@@ -3,11 +3,23 @@ const { isMongoConnected } = require('../config/database');
 const { v4: uuidv4 } = require('uuid');
 
 class CallRepository {
+  // Ensure in-memory store exists
+  _ensureInMemoryStore() {
+    if (!global.inMemoryStore) {
+      global.inMemoryStore = {
+        leads: [],
+        calls: [],
+        appointments: []
+      };
+    }
+  }
+
   // Create call
   async create(callData) {
     if (isMongoConnected()) {
       return await Call.create(callData);
     } else {
+      this._ensureInMemoryStore();
       const call = {
         _id: uuidv4(),
         ...callData,
@@ -26,6 +38,7 @@ class CallRepository {
         .populate('leadId', 'name phone email')
         .sort({ createdAt: -1 });
     } else {
+      this._ensureInMemoryStore();
       let calls = [...global.inMemoryStore.calls];
       
       // Apply filters
@@ -45,6 +58,7 @@ class CallRepository {
     if (isMongoConnected()) {
       return await Call.findById(id).populate('leadId', 'name phone email');
     } else {
+      this._ensureInMemoryStore();
       return global.inMemoryStore.calls.find(c => c._id === id);
     }
   }
@@ -54,6 +68,7 @@ class CallRepository {
     if (isMongoConnected()) {
       return await Call.findOne({ vapiCallId });
     } else {
+      this._ensureInMemoryStore();
       return global.inMemoryStore.calls.find(c => c.vapiCallId === vapiCallId);
     }
   }
@@ -67,6 +82,7 @@ class CallRepository {
         { new: true, runValidators: true }
       );
     } else {
+      this._ensureInMemoryStore();
       const index = global.inMemoryStore.calls.findIndex(c => c._id === id);
       if (index !== -1) {
         global.inMemoryStore.calls[index] = {
@@ -89,6 +105,7 @@ class CallRepository {
         { new: true }
       );
     } else {
+      this._ensureInMemoryStore();
       const index = global.inMemoryStore.calls.findIndex(c => c.vapiCallId === vapiCallId);
       if (index !== -1) {
         global.inMemoryStore.calls[index] = {
@@ -107,6 +124,7 @@ class CallRepository {
     if (isMongoConnected()) {
       return await Call.find({ leadId }).sort({ createdAt: -1 });
     } else {
+      this._ensureInMemoryStore();
       return global.inMemoryStore.calls
         .filter(c => c.leadId === leadId)
         .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));

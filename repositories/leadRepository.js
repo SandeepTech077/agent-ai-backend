@@ -3,12 +3,24 @@ const { isMongoConnected } = require('../config/database');
 const { v4: uuidv4 } = require('uuid');
 
 class LeadRepository {
+  // Ensure in-memory store exists
+  _ensureInMemoryStore() {
+    if (!global.inMemoryStore) {
+      global.inMemoryStore = {
+        leads: [],
+        calls: [],
+        appointments: []
+      };
+    }
+  }
+
   // Create single lead
   async create(leadData) {
     if (isMongoConnected()) {
       return await Lead.create(leadData);
     } else {
       // In-memory storage
+      this._ensureInMemoryStore();
       const lead = {
         _id: uuidv4(),
         ...leadData,
@@ -27,6 +39,7 @@ class LeadRepository {
       return await Lead.insertMany(leadsData);
     } else {
       // In-memory storage
+      this._ensureInMemoryStore();
       const leads = leadsData.map(leadData => ({
         _id: uuidv4(),
         ...leadData,
@@ -45,6 +58,7 @@ class LeadRepository {
       return await Lead.find(filters).sort({ createdAt: -1 });
     } else {
       // In-memory storage
+      this._ensureInMemoryStore();
       let leads = [...global.inMemoryStore.leads];
       
       // Apply filters
@@ -65,6 +79,7 @@ class LeadRepository {
     if (isMongoConnected()) {
       return await Lead.findById(id);
     } else {
+      this._ensureInMemoryStore();
       return global.inMemoryStore.leads.find(l => l._id === id);
     }
   }
@@ -74,6 +89,7 @@ class LeadRepository {
     if (isMongoConnected()) {
       return await Lead.findOne({ phone });
     } else {
+      this._ensureInMemoryStore();
       return global.inMemoryStore.leads.find(l => l.phone === phone);
     }
   }
@@ -87,6 +103,7 @@ class LeadRepository {
         { new: true, runValidators: true }
       );
     } else {
+      this._ensureInMemoryStore();
       const index = global.inMemoryStore.leads.findIndex(l => l._id === id);
       if (index !== -1) {
         global.inMemoryStore.leads[index] = {
@@ -105,6 +122,7 @@ class LeadRepository {
     if (isMongoConnected()) {
       return await Lead.findByIdAndDelete(id);
     } else {
+      this._ensureInMemoryStore();
       const index = global.inMemoryStore.leads.findIndex(l => l._id === id);
       if (index !== -1) {
         const deleted = global.inMemoryStore.leads[index];
@@ -127,6 +145,7 @@ class LeadRepository {
         { new: true }
       );
     } else {
+      this._ensureInMemoryStore();
       const lead = await this.findById(id);
       if (lead) {
         return await this.update(id, {
@@ -147,6 +166,7 @@ class LeadRepository {
       ]);
       return { total, byStatus };
     } else {
+      this._ensureInMemoryStore();
       const leads = global.inMemoryStore.leads;
       const total = leads.length;
       const statusCounts = {};

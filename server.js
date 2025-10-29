@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
 const path = require('path');
+const fs = require('fs');
 require('dotenv').config();
 
 // Import routes
@@ -17,8 +18,28 @@ const {connectDB} = require('./config/database');
 const app = express();
 const PORT = process.env.PORT || 8080;
 
+// Create uploads directory if it doesn't exist
+const uploadsDir = path.join(__dirname, 'uploads');
+if (!fs.existsSync(uploadsDir)) {
+  fs.mkdirSync(uploadsDir, { recursive: true });
+  console.log('📁 Created uploads directory');
+}
+
+// Initialize in-memory store (fallback if MongoDB is not connected)
+if (!global.inMemoryStore) {
+  global.inMemoryStore = {
+    leads: [],
+    calls: [],
+    appointments: []
+  };
+  console.log('📦 In-memory store initialized');
+}
+
 // Connect to Database (MongoDB or in-memory)
-connectDB();
+connectDB().catch(err => {
+  console.warn('⚠️ MongoDB connection failed, using in-memory storage');
+  console.error(err.message);
+});
 
 // Middleware
 app.use(cors({
@@ -75,7 +96,10 @@ app.use((err, req, res, next) => {
 
 // Start Server
 app.listen(PORT, () => {
-  console.log(`Server is running in ${process.env.NODE_ENV || 'development'} mode on port ${PORT}`)});
+  console.log(`🚀 Server is running in ${process.env.NODE_ENV || 'development'} mode on port ${PORT}`);
+  console.log(`📡 API available at http://localhost:${PORT}`);
+  console.log(`🏥 Health check: http://localhost:${PORT}/health`);
+});
 
 // Handle unhandled promise rejections
 process.on('unhandledRejection', (err) => {

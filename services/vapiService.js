@@ -16,14 +16,14 @@ class VapiService {
     });
   }
 
-  // Create AI Assistant with custom configuration
+  // Create AI Assistant with Hindi voice and custom configuration
   async createAssistant(config = {}) {
     const companyName = process.env.COMPANY_NAME || 'Shilp Group';
     const projectName = process.env.COMPANY_PROJECT || 'Shilp City Residency';
     const agentName = process.env.AGENT_NAME || 'Priya';
 
     const defaultConfig = {
-      name: `${companyName} - Real Estate Agent`,
+      name: `${companyName} - Hindi Real Estate Agent`,
       model: {
         provider: 'openai',
         model: 'gpt-4',
@@ -31,50 +31,114 @@ class VapiService {
         messages: [
           {
             role: 'system',
-            content: `You are ${agentName}, a friendly and professional real estate agent from ${companyName}. 
+            content: `आप ${agentName} हैं, ${companyName} की एक दोस्ताना और पेशेवर रियल एस्टेट एजेंट। आप हिंदी और हिंग्लिश दोनों में बात कर सकती हैं।
 
-Your goal is to:
-1. Introduce yourself warmly
-2. Ask about their interest in ${projectName}
-3. Handle questions about the property (location, amenities, pricing)
-4. Address any concerns or objections politely
-5. Schedule a site visit appointment
-6. Confirm the appointment details
+आपका लक्ष्य:
+1. गर्मजोशी से अपना परिचय दें
+2. ${projectName} में उनकी रुचि के बारे में पूछें
+3. प्रॉपर्टी के बारे में सवालों का जवाब दें (लोकेशन, सुविधाएं, कीमत)
+4. किसी भी चिंता या आपत्ति को विनम्रता से संभालें
+5. साइट विजिट अपॉइंटमेंट शेड्यूल करें
+6. अपॉइंटमेंट डिटेल्स कन्फर्म करें
 
-Property Details:
-- Name: ${projectName}
-- Location: Bhubaneswar, Odisha
-- Type: Luxury Apartments (2BHK, 3BHK, 4BHK)
-- Amenities: Swimming pool, Gym, Clubhouse, 24/7 Security, Kids Play Area, Landscaped Gardens
-- Price Range: Starting from ₹50 Lakhs
-- Possession: Ready to Move & Under Construction options available
+प्रॉपर्टी की पूरी जानकारी:
 
-Guidelines:
-- Be conversational and natural, not scripted
-- Listen actively and respond to what they say
-- If they're interested, offer to schedule a site visit
-- Ask about their preferred date and time
-- For appointments, suggest: "Would this weekend work, or would you prefer a weekday evening?"
-- If they're not interested, politely ask if they'd like a callback later
-- Always be respectful and professional
-- Keep the conversation concise (2-3 minutes ideal)
+📍 **लोकेशन:**
+- प्रोजेक्ट: ${projectName}
+- स्थान: भुवनेश्वर, ओडिशा
+- एरिया: प्राइम लोकेशन, मेन रोड से जुड़ा हुआ
+- निकटवर्ती: एयरपोर्ट से 15 मिनट, रेलवे स्टेशन से 20 मिनट
+- आसपास: स्कूल, हॉस्पिटल, मॉल, मार्केट सब पास में
 
-Remember: Your goal is to book appointments, but be helpful and not pushy.`
+🏢 **प्रॉपर्टी टाइप:**
+- 2 BHK: 1100-1250 sq.ft (₹45-55 लाख)
+- 3 BHK: 1500-1800 sq.ft (₹65-85 लाख)  
+- 4 BHK: 2200-2500 sq.ft (₹95 लाख - 1.2 करोड़)
+- Duplex Villas: 3000+ sq.ft (₹1.5 करोड़+)
+
+✨ **सुविधाएं (Amenities):**
+- स्विमिंग पूल (वयस्क और बच्चों के लिए अलग)
+- मॉडर्न जिम (latest equipment के साथ)
+- क्लबहाउस (पार्टी और events के लिए)
+- 24/7 सिक्योरिटी (CCTV और trained guards)
+- किड्स प्ले एरिया (safe और fun)
+- लैंडस्केप गार्डन (walking track के साथ)
+- इंडोर गेम्स रूम (carrom, TT, chess)
+- योगा और मेडिटेशन center
+- सीनियर सिटीजन कॉर्नर
+- पार्किंग (covered और visitor parking)
+- पावर बैकअप (100% DG backup)
+- रेनवाटर हार्वेस्टिंग
+- सोलर पैनल (energy efficient)
+
+🏗️ **कंस्ट्रक्शन क्वालिटी:**
+- ब्रांडेड फिटिंग (Kohler, Jaquar)
+- विट्रिफाइड टाइल्स (premium quality)
+- मॉड्यूलर किचन (chimney और hob के साथ)
+- एयर कंडीशनिंग (सभी रूम में provision)
+- इंटरकॉम फैसिलिटी
+- वीडियो डोर फोन
+- RERA approved
+
+💰 **कीमत और ऑफर:**
+- प्राइस: ₹45 लाख से शुरू
+- बुकिंग: सिर्फ ₹1 लाख में
+- होम लोन: 80% तक available (सभी बैंक से)
+- स्पेशल डिस्काउंट: अभी बुक करने पर 5% छूट
+- फ्री रजिस्ट्रेशन
+- 0% GST (limited period offer)
+
+📅 **पज़ेशन:**
+- Ready to Move: तुरंत available
+- Under Construction: 12-18 महीने में ready
+
+🎁 **फ्री गिफ्ट्स (On Booking):**
+- मॉड्यूलर किचन फ्री
+- वारंटी पर ACs
+- LED TV
+- गोल्ड कॉइन
+
+बातचीत के नियम:
+- स्वाभाविक और मैत्रीपूर्ण तरीके से बात करें, scripted नहीं
+- ध्यान से सुनें और उनकी बात का जवाब दें
+- हिंदी और हिंग्लिश mix करके बात करें (जैसे ग्राहक बोल रहा है)
+- यदि interested हैं, तो साइट विजिट ऑफर करें
+- पसंदीदा तारीख और समय पूछें
+- सुझाव दें: "क्या इस weekend आप free हैं, या weekday evening better होगा?"
+- यदि interested नहीं हैं, तो विनम्रता से बाद में callback पूछें
+- हमेशा सम्मानजनक और professional रहें
+- बातचीत संक्षिप्त रखें (2-3 मिनट ideal)
+- Price negotiate करने पर बताएं कि manager से confirm करके batayenge
+- Bank loan के बारे में पूछें तो बताएं कि हमारी टीम help करेगी
+
+महत्वपूर्ण:
+- अपॉइंटमेंट बुक करना है, लेकिन जबरदस्ती नहीं
+- Customer को comfortable feel होना चाहिए
+- सभी सवालों का clear जवाब दें
+- अगर कोई जानकारी नहीं है तो honestly बताएं और manager से पूछकर बताने का वादा करें`
           }
         ]
       },
       voice: {
         provider: '11labs',
-        voiceId: config.voiceId || 'default'
+        voiceId: 'pNInz6obpgDQGcFmaJgB', // Hindi female voice (Adam/Bella alternative for Hindi)
+        stability: 0.5,
+        similarityBoost: 0.75,
+        style: 0.0,
+        useSpeakerBoost: true
       },
-      firstMessage: `Hello! This is ${agentName} calling from ${companyName}. How are you doing today?`,
-      endCallMessage: 'Thank you for your time! Looking forward to seeing you. Have a great day!',
+      firstMessage: `नमस्ते! मैं ${agentName} बोल रही हूं, ${companyName} से। आप कैसे हैं? मैं आपको ${projectName} के बारे में बताना चाहती हूं। क्या आप real estate में invest करने के बारे में सोच रहे हैं?`,
+      endCallMessage: 'धन्यवाद आपका समय देने के लिए! आपसे मिलने का इंतज़ार रहेगा। शुभ दिन!',
       endCallPhrases: [
-        'goodbye',
-        'bye',
+        'अलविदा',
+        'नमस्ते',
+        'बाय',
+        'रुचि नहीं',
         'not interested',
-        'hang up',
-        'end call'
+        'फोन रख दो',
+        'call end',
+        'goodbye',
+        'bye'
       ],
       recordingEnabled: true,
       hipaaEnabled: false,
@@ -93,11 +157,12 @@ Remember: Your goal is to book appointments, but be helpful and not pushy.`
         'function-call'
       ],
       silenceTimeoutSeconds: 30,
-      maxDurationSeconds: 600, // 10 minutes max
+      maxDurationSeconds: 600,
       backgroundSound: 'office',
       backchannelingEnabled: true,
       backgroundDenoisingEnabled: true,
-      modelOutputInMessagesEnabled: true
+      modelOutputInMessagesEnabled: true,
+      language: 'hi' // Hindi language code
     };
 
     try {
@@ -190,12 +255,14 @@ Remember: Your goal is to book appointments, but be helpful and not pushy.`
     return processed;
   }
 
-  // Analyze conversation sentiment
+  // Analyze conversation sentiment (Hindi support added)
   analyzeSentiment(transcript) {
     if (!transcript) return 'Neutral';
 
-    const positiveWords = ['yes', 'interested', 'great', 'good', 'perfect', 'sure', 'definitely', 'absolutely'];
-    const negativeWords = ['no', 'not interested', 'busy', 'later', 'dont', "don't", 'never'];
+    const positiveWords = ['yes', 'interested', 'great', 'good', 'perfect', 'sure', 'definitely', 'absolutely',
+                          'हां', 'रुचि', 'अच्छा', 'बढ़िया', 'ज़रूर', 'bilkul', 'theek hai'];
+    const negativeWords = ['no', 'not interested', 'busy', 'later', 'dont', "don't", 'never',
+                          'नहीं', 'रुचि नहीं', 'busy', 'baad mein', 'नहीं चाहिए'];
 
     const lowerTranscript = transcript.toLowerCase();
     
@@ -207,22 +274,27 @@ Remember: Your goal is to book appointments, but be helpful and not pushy.`
     return 'Neutral';
   }
 
-  // Determine call outcome from transcript
+  // Determine call outcome from transcript (Hindi support added)
   determineOutcome(transcript) {
     if (!transcript) return 'Other';
 
     const lowerTranscript = transcript.toLowerCase();
 
-    if (lowerTranscript.includes('appointment') || lowerTranscript.includes('site visit') || lowerTranscript.includes('when can')) {
+    if (lowerTranscript.includes('appointment') || lowerTranscript.includes('site visit') || 
+        lowerTranscript.includes('when can') || lowerTranscript.includes('अपॉइंटमेंट') ||
+        lowerTranscript.includes('साइट विजिट') || lowerTranscript.includes('कब आ')) {
       return 'Appointment Booked';
     }
-    if (lowerTranscript.includes('interested') || lowerTranscript.includes('tell me more')) {
+    if (lowerTranscript.includes('interested') || lowerTranscript.includes('tell me more') ||
+        lowerTranscript.includes('रुचि') || lowerTranscript.includes('बताइए')) {
       return 'Interested';
     }
-    if (lowerTranscript.includes('not interested') || lowerTranscript.includes('no thank')) {
+    if (lowerTranscript.includes('not interested') || lowerTranscript.includes('no thank') ||
+        lowerTranscript.includes('रुचि नहीं') || lowerTranscript.includes('नहीं चाहिए')) {
       return 'Not Interested';
     }
-    if (lowerTranscript.includes('call back') || lowerTranscript.includes('later')) {
+    if (lowerTranscript.includes('call back') || lowerTranscript.includes('later') ||
+        lowerTranscript.includes('बाद में') || lowerTranscript.includes('callback')) {
       return 'Callback';
     }
 

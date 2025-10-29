@@ -1,7 +1,6 @@
-// db.js
 const mongoose = require('mongoose');
 
-const uri = process.env.MONGODB_URI; // your .env: MONGODB_URI=mongodb+srv://user:password@cluster0.aswop0t.mongodb.net/dbname?retryWrites=true&w=majority
+const uri = process.env.MONGODB_URI;
 
 const clientOptions = {
   serverApi: {
@@ -14,7 +13,15 @@ const clientOptions = {
 let isConnected = false;
 
 const connectDB = async () => {
-  if (isConnected) return; // avoid multiple connections
+  if (isConnected) {
+    console.log('✅ MongoDB already connected');
+    return;
+  }
+
+  if (!uri) {
+    console.warn('⚠️ MONGODB_URI not found in .env, using in-memory storage');
+    return;
+  }
 
   try {
     await mongoose.connect(uri, clientOptions);
@@ -28,6 +35,7 @@ const connectDB = async () => {
     // Event listeners
     mongoose.connection.on('error', (err) => {
       console.error('❌ MongoDB connection error:', err);
+      isConnected = false;
     });
 
     mongoose.connection.on('disconnected', () => {
@@ -47,8 +55,13 @@ const connectDB = async () => {
 
   } catch (err) {
     console.error('❌ MongoDB connection failed:', err.message);
-    process.exit(1);
+    console.warn('⚠️ Falling back to in-memory storage');
+    isConnected = false;
+    // Don't exit process, continue with in-memory storage
   }
 };
 
-module.exports = { connectDB };
+// Check if MongoDB is connected
+const isMongoConnected = () => isConnected;
+
+module.exports = { connectDB, isMongoConnected };
